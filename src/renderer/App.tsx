@@ -1,9 +1,9 @@
 import Versions from './components/Versions';
 import electronLogo from './assets/electron.svg';
-import { useIpc } from './hooks/useIpc';
+import { useInvoke } from './hooks/useInvoke';
 
 function App() {
-  const { user: { auth } } = useIpc();
+  const { user: { auth } } = useInvoke();
 
   const authHandler = async (): Promise<void> => {
     const rst = await auth('USER', 'PASS');

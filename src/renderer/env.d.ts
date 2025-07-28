@@ -6,7 +6,7 @@ type Invoke = <T extends keyof Events>(
         ...args: Parameters<Events[T]> extends [unknown, ...infer Rest]
           ? Rest
           : never,
-      ) => Promise<ReturnType<Events[T]>>;
+      ) => ReturnType<Events[T]>;
 
 interface Versions {
   electron: string;

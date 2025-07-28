@@ -6,18 +6,13 @@ function invoke<T extends keyof Events>(channel: T, ...args: Parameters<Events[T
   return electronAPI.ipcRenderer.invoke(channel, ...args);
 }
 
-// Custom APIs for renderer
-const api = {
-  invoke,
-};
-
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
 // just add to the DOM global.
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('electron', electronAPI);
-    contextBridge.exposeInMainWorld('api', api);
+    contextBridge.exposeInMainWorld('invoke', invoke);
   } catch (error) {
     console.error(error);
   }
@@ -25,7 +20,7 @@ if (process.contextIsolated) {
   // @ts-expect-error (define in dts)
   window.electron = electronAPI;
   // @ts-expect-error (define in dts)
-  window.api = api;
+  window.invoke = invoke;
 }
 
 
