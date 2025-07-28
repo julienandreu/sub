@@ -1,11 +1,14 @@
 import Versions from './components/Versions';
 import electronLogo from './assets/electron.svg';
+import { useIpc } from './hooks/useIpc';
 
 function App() {
-  const ipcHandle = (): void => {
-    // @ts-expect-error (define in dts)
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
-    window.electron?.ipcRenderer?.send('ping');
+  const { user: { auth } } = useIpc();
+
+  const authHandler = async (): Promise<void> => {
+    const rst = await auth('USER', 'PASS');
+
+    alert(JSON.stringify(rst, null, 2));
   };
 
   return (
@@ -26,8 +29,8 @@ function App() {
           </a>
         </div>
         <div className="action">
-          <a target="_blank" rel="noreferrer" onClick={ipcHandle}>
-            Send IPC
+          <a target="_blank" rel="noreferrer" onClick={() => void authHandler()}>
+            Authenticate
           </a>
         </div>
       </div>

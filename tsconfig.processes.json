@@ -1,8 +1,9 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.node.json",
   "include": [
-    "src/main/**/*",
-    "src/preload/**/*"
+    "src/events/**/*",
+    "src/processes/main/**/*",
+    "src/processes/preload/**/*"
   ],
   "exclude": [
     "electron.vite.config.mjs"

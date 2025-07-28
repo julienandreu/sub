@@ -2,10 +2,10 @@
   "extends": "@electron-toolkit/tsconfig/tsconfig.json",
   "references": [
     {
-      "path": "./tsconfig.node.json"
+      "path": "./tsconfig.processes.json"
     },
     {
-      "path": "./tsconfig.web.json"
+      "path": "./tsconfig.renderer.json"
     }
   ],
   "compilerOptions": {

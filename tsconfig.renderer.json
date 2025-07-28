@@ -1,9 +1,9 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/renderer/src/**/*.ts",
-    "src/renderer/src/**/*.tsx",
-    "src/preload/*.d.ts"
+    "src/events/**/*",
+    "src/renderer/**/*.ts",
+    "src/renderer/**/*.tsx"
   ],
   "exclude": [
     "electron.vite.config.mjs"
@@ -11,6 +11,9 @@
   "compilerOptions": {
     "composite": true,
     "jsx": "preserve",
-    "jsxImportSource": "preact"
+    "jsxImportSource": "preact",
+    "types": [
+      "./src/renderer/env.d.ts"
+    ]
   }
 }

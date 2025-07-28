@@ -1,8 +1,15 @@
 import { contextBridge } from 'electron';
 import { electronAPI } from '@electron-toolkit/preload';
+import type { Events } from '../../events';
+
+function invoke<T extends keyof Events>(channel: T, ...args: Parameters<Events[T]>): Promise<ReturnType<Events[T]>> {
+  return electronAPI.ipcRenderer.invoke(channel, ...args);
+}
 
 // Custom APIs for renderer
-const api = {};
+const api = {
+  invoke,
+};
 
 // Use `contextBridge` APIs to expose Electron APIs to
 // renderer only if context isolation is enabled, otherwise
@@ -20,3 +27,5 @@ if (process.contextIsolated) {
   // @ts-expect-error (define in dts)
   window.api = api;
 }
+
+

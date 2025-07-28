@@ -18,6 +18,13 @@ export default tseslint.config(
   tseslint.configs.strictTypeChecked,
   tseslint.configs.stylisticTypeChecked,
   {
+    languageOptions: {
+      parser: tsParser,
+      parserOptions: {
+        projectService: true,
+        tsconfigRootDir: import.meta.dirname,
+      },
+    },
     rules: {
       quotes: [
         'error',
@@ -34,34 +41,6 @@ export default tseslint.config(
           ignoreDeclarationSort: true,
         },
       ],
-    },
-  },
-  // Configuration for main and preload files (Node.js environment)
-  {
-    files: [
-      'src/main/**/*.ts',
-      'src/preload/**/*.ts',
-    ],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.node.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-  // Configuration for renderer files (Web environment)
-  {
-    files: [
-      'src/renderer/**/*.ts',
-      'src/renderer/**/*.tsx',
-    ],
-    languageOptions: {
-      parser: tsParser,
-      parserOptions: {
-        project: './tsconfig.web.json',
-        tsconfigRootDir: import.meta.dirname,
-      },
     },
   },
 );
