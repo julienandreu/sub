@@ -1,0 +1,16 @@
+{
+  "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
+  "include": [
+    "src/renderer/src/**/*.ts",
+    "src/renderer/src/**/*.tsx",
+    "src/preload/*.d.ts"
+  ],
+  "exclude": [
+    "electron.vite.config.mjs"
+  ],
+  "compilerOptions": {
+    "composite": true,
+    "jsx": "preserve",
+    "jsxImportSource": "preact"
+  }
+}
