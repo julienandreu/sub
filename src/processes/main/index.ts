@@ -4,7 +4,6 @@ import { join } from 'path';
 import { events } from '../../events';
 
 function createWindow(): void {
-  // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 900,
     height: 670,
@@ -33,8 +32,6 @@ function createWindow(): void {
   } else {
     void mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
   }
-
-  mainWindow.webContents.openDevTools({ mode: 'detach' });
 }
 
 // This method will be called when Electron has finished
@@ -69,9 +66,7 @@ app.on('window-all-closed', () => {
   }
 });
 
-// In this file you can include the rest of your app's specific main process
-// code. You can also put them in separate files and require them here.
+// Handle events
 Object.entries(events).forEach(([channel, listener]) => {
   ipcMain.handle(channel, listener);
 });
-
