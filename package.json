@@ -10,8 +10,12 @@
   "dependencies": {
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
+    "@preact/signals": "^2.2.1",
     "electron-updater": "^6.3.9",
-    "preact": "^10.26.9"
+    "preact": "^10.26.9",
+    "preact-iso": "^2.9.2",
+    "preact-render-to-string": "^6.5.13",
+    "styled-components": "^6.1.19"
   },
   "description": "🥪 Salad Under Bacon",
   "devDependencies": {
