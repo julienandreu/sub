@@ -19,6 +19,8 @@ nsis:
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
 mac:
+  category: public.app-category.utilities
+  identity: "Saris AI"
   appId: com.sub.app
   entitlementsInherit: build/entitlements.mac.plist
   extendInfo:

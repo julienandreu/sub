@@ -1,5 +1,5 @@
 import { resolve } from 'path';
-import { defineConfig, bytecodePlugin } from 'electron-vite';
+import { defineConfig } from 'electron-vite';
 import preact from '@preact/preset-vite';
 
 export default defineConfig({
@@ -9,9 +9,6 @@ export default defineConfig({
         entry: resolve('src/processes/main/index.ts')
       }
     },
-    plugins: [
-      bytecodePlugin()
-    ]
   },
   preload: {
     build: {
@@ -19,9 +16,6 @@ export default defineConfig({
         entry: resolve('src/processes/preload/index.ts')
       }
     },
-    plugins: [
-      bytecodePlugin()
-    ]
   },
   renderer: {
     plugins: [preact()]

@@ -28,6 +28,7 @@ export class Widget {
       resizable: false,
       show: true,
       transparent: true,
+      visualEffectState: 'active',
       width: 64,
       webPreferences: {
         preload: join(__dirname, '../preload/index.js'),

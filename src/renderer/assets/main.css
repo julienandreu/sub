@@ -17,3 +17,10 @@ body {
   flex-direction: column;
   flex-grow: 1;
 }
+
+html,
+body {
+  background: transparent !important;
+  margin: 0;
+  padding: 0;
+}
