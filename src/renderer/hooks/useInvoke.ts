@@ -1,4 +1,4 @@
-import { WindowPosition } from '../../events/window';
+import type { AvailableWindows, WindowPosition } from '../../events/window';
 
 export function useInvoke() {
 
@@ -8,6 +8,7 @@ export function useInvoke() {
     },
     window: {
       move: (destination: WindowPosition) => window.invoke('window.move', destination),
+      open: (endpoint: AvailableWindows) => window.invoke('window.open', endpoint),
     },
   } as const;
 }

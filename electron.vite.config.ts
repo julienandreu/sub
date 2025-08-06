@@ -5,6 +5,12 @@ import preact from '@preact/preset-vite';
 export default defineConfig({
   main: {
     build: {
+      rollupOptions: {
+        external: ['better-sqlite3', 'electron']
+      },
+      commonjsOptions: {
+        ignoreDynamicRequires: true
+      },
       lib: {
         entry: resolve('src/processes/main/index.ts')
       }

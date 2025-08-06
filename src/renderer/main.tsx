@@ -2,11 +2,14 @@ import './assets/main.css';
 
 import { render } from 'preact';
 import App from './App';
+import log from 'electron-log/renderer';
 
-const root = document.getElementById('root');
+Object.assign(console, log.functions);
 
-if (!root) {
-  throw new Error('Root element not found');
+const main = document.getElementById('main');
+
+if (!main) {
+  throw new Error('Main element not found');
 }
 
-render(<App />, root);
+render(<App />, main);

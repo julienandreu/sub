@@ -1,4 +1,7 @@
 import { BrowserWindow, type IpcMainInvokeEvent } from 'electron';
+import { Auth } from '../processes/main/windows/auth';
+
+export type AvailableWindows = 'auth';
 
 export interface WindowPosition {
   x: number;
@@ -7,7 +10,7 @@ export interface WindowPosition {
 
 export const window = {
   'window.move': (
-    {sender: {id = -1}}: IpcMainInvokeEvent,
+    { sender: { id = -1 } }: IpcMainInvokeEvent,
     destination: WindowPosition,
   ): WindowPosition => {
     const allWindows = BrowserWindow.getAllWindows();
@@ -28,6 +31,15 @@ export const window = {
       x: newX,
       y: newY,
     };
+  },
+  'window.open': (_: IpcMainInvokeEvent, endpoint: AvailableWindows) => {
+    switch (endpoint) {
+      // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+      case 'auth':
+        return Auth.getInstance().create();
+      default:
+        throw new Error(`Unknown window: ${String(endpoint)}`);
+    }
   },
 } as const;
 

@@ -9,7 +9,7 @@ const clickThreshold = 100;
 let startTime = performance.now();
 
 function Widget() {
-  const { user: { auth }, window: { move: moveWindow } } = useInvoke();
+  const { window: { move, open } } = useInvoke();
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ function Widget() {
       start = { x: screenX, y: screenY };
       startTime = performance.now();
 
-      const move = (ev: PointerEvent) => {
+      const _move = (ev: PointerEvent) => {
         if (!start) {
           return;
         }
@@ -32,14 +32,14 @@ function Widget() {
         };
 
         if (Math.hypot(distance.x, distance.y) > distanceThreshold) {
-          moveWindow(distance);
+          move(distance);
 
           start = { x: ev.screenX, y: ev.screenY };
         }
       };
 
-      const up = (ev: PointerEvent) => {
-        document.removeEventListener('pointermove', move);
+      const up = (ev: PointerEvent): void => {
+        document.removeEventListener('pointermove', _move);
         document.removeEventListener('pointerup', up);
 
         if (!start) {
@@ -54,10 +54,10 @@ function Widget() {
           return;
         }
 
-        void authHandler();
+        authHandler();
       };
 
-      document.addEventListener('pointermove', move);
+      document.addEventListener('pointermove', _move);
       document.addEventListener('pointerup', up, { once: true });
     };
 
@@ -68,10 +68,8 @@ function Widget() {
     };
   }, [ref]);
 
-  const authHandler = async (): Promise<void> => {
-    const rst = await auth('USER', 'PASS');
-
-    console.dir(rst, { depth: null, colors: true });
+  const authHandler = (): void => {
+    void open('auth');
   };
 
   return (

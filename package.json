@@ -11,6 +11,8 @@
     "@electron-toolkit/preload": "^3.0.2",
     "@electron-toolkit/utils": "^4.0.0",
     "@preact/signals": "^2.2.1",
+    "better-sqlite3": "^12.2.0",
+    "electron-log": "^5.4.2",
     "electron-updater": "^6.3.9",
     "preact": "^10.26.9",
     "preact-iso": "^2.9.2",
