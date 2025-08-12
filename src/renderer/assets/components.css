@@ -1,0 +1,39 @@
+/* Tailwind component layer using @apply to centralize UI primitives */
+@layer components {
+  .card {
+    @apply rounded-lg shadow-md p-8;
+    background-color: hsl(var(--card));
+    color: hsl(var(--card-foreground));
+  }
+
+  .card-title {
+    @apply text-2xl font-bold text-center mb-2;
+  }
+
+  .label {
+    @apply block text-sm font-medium;
+  }
+
+  .input {
+    @apply w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    border-color: hsl(var(--border));
+    --tw-ring-color: hsl(var(--ring));
+  }
+
+  .btn {
+    @apply w-full py-2 rounded-md transition-colors;
+  }
+
+  /* Do not @apply custom classes (unsupported). Repeat base utilities here */
+  .btn-primary {
+    @apply w-full py-2 rounded-md transition-colors;
+    background-color: hsl(var(--primary));
+    color: hsl(var(--primary-foreground));
+  }
+
+  .btn-primary:hover {
+    @apply opacity-90;
+  }
+}
