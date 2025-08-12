@@ -53,6 +53,7 @@ export class Storage {
     return this;
   }
 
+  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-parameters
   get<T>(key: string): T | null {
     if (!this.db) {
       throw new Error('Database not connected');
@@ -69,5 +70,16 @@ export class Storage {
     }
 
     return result as T;
+  }
+
+  set(key: string, value: unknown): this {
+    if (!this.db) {
+      throw new Error('Database not connected');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    this.db.prepare('INSERT OR REPLACE INTO storage (key, value) VALUES (?, ?)').run(key, value);
+
+    return this;
   }
 }

@@ -1,5 +1,6 @@
 import { BrowserWindow, type BrowserWindowConstructorOptions } from 'electron';
 import { PRELOAD_PATH } from './constants';
+import { is } from '@electron-toolkit/utils';
 
 export class Base {
   public window: BrowserWindow | null = null;
@@ -28,7 +29,11 @@ export class Base {
 
     this.window?.webContents.openDevTools({ mode: 'detach' });
 
-    await this.window?.loadURL(`app://-${this.path}`);
+    if (is.dev && process.env.ELECTRON_RENDERER_URL) {
+      await this.window?.loadURL(`${process.env.ELECTRON_RENDERER_URL}${this.path}`);
+    } else {
+      await this.window?.loadURL(`app://-${this.path}`);
+    }
 
     return this;
   }

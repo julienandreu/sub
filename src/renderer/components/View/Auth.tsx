@@ -1,7 +1,7 @@
 function Auth() {
   return (
     <>
-      Auth
+      AUTH
     </>
   );
 }

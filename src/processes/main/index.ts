@@ -1,5 +1,5 @@
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { app, BrowserWindow, ipcMain, net, protocol } from 'electron';
+import { App, app, BrowserWindow, ipcMain, net, protocol } from 'electron';
 import { events } from '../../events';
 import { Widget } from './windows/widget';
 import { join } from 'path';
@@ -7,6 +7,10 @@ import { Storage } from './storage';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
 import { pathToFileURL } from 'url';
+
+function getStoragePath(app: App) {
+  return join(app.getPath('userData'), 'storage.db');
+}
 
 async function initialize() {
   log.initialize({
@@ -76,7 +80,7 @@ async function initialize() {
 
   await Widget.getInstance().create();
 
-  Storage.getInstance().connect(join(app.getPath('userData'), 'storage.db'));
+  Storage.getInstance().connect(getStoragePath(app));
 }
 
 void initialize();
