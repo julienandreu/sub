@@ -9,6 +9,16 @@ export class Widget extends Base {
     return Widget.instance;
   }
 
+  public override async create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
+    if (this.window) {
+      this.window.focus();
+
+      return this;
+    }
+
+    return super.create(options);
+  }
+
   protected path = '/widget';
 
   private constructor() {

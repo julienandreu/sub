@@ -9,6 +9,16 @@ export class Auth extends Base {
     return Auth.instance;
   }
 
+  public override async create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
+    if (this.window) {
+      this.window.focus();
+
+      return this;
+    }
+
+    return super.create(options);
+  }
+
   protected path = '/auth';
 
   protected getOptions(): BrowserWindowConstructorOptions {
@@ -17,12 +27,5 @@ export class Auth extends Base {
       height: 480,
       width: 320,
     };
-  }
-
-  protected async afterLoad(): Promise<unknown> {
-    console.log('AUTH.afterLoad', this.window?.id);
-    return this.window?.webContents.executeJavaScript(
-      'window.location.hash = "/auth"',
-    );
   }
 }
