@@ -7,6 +7,8 @@ export class Base {
 
   protected path = '/';
 
+  protected showOnReady = false;
+
   protected getOptions(): BrowserWindowConstructorOptions {
     return {
       show: false,
@@ -20,14 +22,14 @@ export class Base {
 
   protected async prepare(): Promise<this> {
     this.window?.on('ready-to-show', () => {
-      this.window?.show();
+      if (this.showOnReady) {
+        this.window?.show();
+      }
     });
 
     this.window?.on('closed', () => {
       this.window = null;
     });
-
-    this.window?.webContents.openDevTools({ mode: 'detach' });
 
     if (is.dev && process.env.ELECTRON_RENDERER_URL) {
       await this.window?.loadURL(`${process.env.ELECTRON_RENDERER_URL}${this.path}`);

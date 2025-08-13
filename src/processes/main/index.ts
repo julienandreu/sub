@@ -1,12 +1,15 @@
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { App, app, BrowserWindow, ipcMain, net, protocol } from 'electron';
-import { events } from '../../events';
-import { Widget } from './windows/widget';
-import { join } from 'path';
-import { Storage } from './storage';
+import { App, app, ipcMain, type IpcMainInvokeEvent, net, protocol } from 'electron';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
+import { join } from 'path';
 import { pathToFileURL } from 'url';
+import { events } from '../../events';
+import { Storage } from './storage';
+import { Auth } from './windows/auth';
+import { Widget } from './windows/widget';
+
+const emptyIpcMainInvokeEvent: IpcMainInvokeEvent = {} as IpcMainInvokeEvent;
 
 function getStoragePath(app: App) {
   return join(app.getPath('userData'), 'storage.db');
@@ -46,13 +49,8 @@ async function initialize() {
     return net.fetch(pathToFileURL(uri).toString());
   });
 
-  // Quit when all windows are closed, except on macOS. There, it's common
-  // for applications and their menu bar to stay active until the user quits
-  // explicitly with Cmd + Q.
   app.on('window-all-closed', () => {
-    if (process.platform !== 'darwin') {
-      app.quit();
-    }
+    app.quit();
   });
 
   // Handle events
@@ -70,17 +68,18 @@ async function initialize() {
     optimizer.watchWindowShortcuts(window);
   });
 
-  app.on('activate', () => {
-    // On macOS it's common to re-create a window in the app when the
-    // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) {
-      void Widget.getInstance().create();
-    }
-  });
-
-  await Widget.getInstance().create();
-
   Storage.getInstance().connect(getStoragePath(app));
+
+
+  try {
+    await events['users.me'](emptyIpcMainInvokeEvent);
+
+    const widget = await Widget.getInstance().create();
+    widget.window?.show();
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  } catch (_) {
+    await Auth.getInstance().create();
+  }
 }
 
 void initialize();

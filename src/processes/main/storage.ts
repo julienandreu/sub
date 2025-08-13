@@ -69,7 +69,9 @@ export class Storage {
       return null;
     }
 
-    return result as T;
+    const { value } = result as { value: T };
+
+    return value;
   }
 
   set(key: string, value: unknown): this {
@@ -79,6 +81,17 @@ export class Storage {
 
     // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
     this.db.prepare('INSERT OR REPLACE INTO storage (key, value) VALUES (?, ?)').run(key, value);
+
+    return this;
+  }
+
+  remove(key: string): this {
+    if (!this.db) {
+      throw new Error('Database not connected');
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-call, @typescript-eslint/no-unsafe-member-access
+    this.db.prepare('DELETE FROM storage WHERE key = ?').run(key);
 
     return this;
   }

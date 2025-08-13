@@ -1,4 +1,4 @@
-import type { BrowserWindowConstructorOptions } from 'electron';
+import { type BrowserWindowConstructorOptions } from 'electron';
 import { Base } from './base';
 
 export class Auth extends Base {
@@ -19,12 +19,17 @@ export class Auth extends Base {
     return super.create(options);
   }
 
+  protected override showOnReady = true;
+
   protected path = '/auth';
 
   protected getOptions(): BrowserWindowConstructorOptions {
     return {
       ...super.getOptions(),
+      alwaysOnTop: true,
+      autoHideMenuBar: true,
       height: 480,
+      minimizable: false,
       width: 320,
     };
   }

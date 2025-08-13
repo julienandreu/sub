@@ -1,10 +1,10 @@
 import type { AvailableWindows, WindowPosition } from '../../events/window';
 
 export function useInvoke() {
-
   return {
     user: {
-      auth: (username: string, password: string) => window.invoke('users.auth', username, password),
+      signIn: (username: string, password: string) => window.invoke('users.sign-in', username, password),
+      signOut: () => window.invoke('users.sign-out'),
     },
     window: {
       move: (destination: WindowPosition) => window.invoke('window.move', destination),

@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'preact/hooks';
-import { useInvoke } from '../../hooks/useInvoke';
+import { useInvoke } from '../../hooks/use-invoke';
 import Icon from '../Layout/Icon';
 
 const distanceThreshold = 5;
