@@ -1,5 +1,5 @@
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { App, app, ipcMain, type IpcMainInvokeEvent, net, protocol } from 'electron';
+import { App, app, ipcMain, type IpcMainInvokeEvent, Menu, nativeImage, net, protocol, Tray } from 'electron';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
 import { join } from 'path';
@@ -8,11 +8,22 @@ import { events } from '../../events';
 import { Storage } from './storage';
 import { Auth } from './windows/auth';
 import { Widget } from './windows/widget';
+import appIcon from '../../renderer/assets/icons/mono/tray-icon.png?asset';
+
+let trayIcon: Tray;
 
 const emptyIpcMainInvokeEvent: IpcMainInvokeEvent = {} as IpcMainInvokeEvent;
 
 function getStoragePath(app: App) {
   return join(app.getPath('userData'), 'storage.db');
+}
+
+function getRendererPath() {
+  return join(
+    __dirname,
+    '..',
+    'renderer',
+  );
 }
 
 async function initialize() {
@@ -34,23 +45,36 @@ async function initialize() {
 
   await app.whenReady();
 
+
+  const icon = nativeImage.createFromPath(appIcon);
+  trayIcon = new Tray(icon);
+  const contextMenu = Menu.buildFromTemplate([
+    { label: 'Item1', type: 'radio' },
+    { label: 'Item2', type: 'radio' }
+  ]);
+
+  // Make a change to the context menu
+  contextMenu.items[1].checked = false;
+
+  // Call this again for Linux because we modified the context menu
+  trayIcon.setContextMenu(contextMenu);
+
   protocol.handle('app', request => {
     const { pathname } = new URL(request.url);
 
     const path = join(
-      __dirname,
-      '..',
-      'renderer',
+      getRendererPath(),
       pathname === '/' ? '/index.html' : pathname
     );
 
-    const uri = existsSync(path) ? path : join(__dirname, '..', 'renderer', 'index.html');
+    const uri = existsSync(path) ? path : join(getRendererPath(), 'index.html');
 
     return net.fetch(pathToFileURL(uri).toString());
   });
 
   app.on('window-all-closed', () => {
     app.quit();
+    process.exit(0);
   });
 
   // Handle events

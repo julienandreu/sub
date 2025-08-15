@@ -74,7 +74,7 @@ function Widget() {
 
   return (
     <Icon ref={ref}>
-      SUB
+      <img src="assets/icons/regular/favicon.ico" alt="SUB" className="pointer-events-none" />
     </Icon>
   );
 }

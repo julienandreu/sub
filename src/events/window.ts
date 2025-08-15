@@ -32,11 +32,14 @@ export const window = {
       y: newY,
     };
   },
-  'window.open': (_: IpcMainInvokeEvent, endpoint: AvailableWindows) => {
+  'window.open': async (_: IpcMainInvokeEvent, endpoint: AvailableWindows) => {
     switch (endpoint) {
       // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
-      case 'auth':
-        return Auth.getInstance().create();
+      case 'auth': {
+        const auth = await Auth.getInstance().create();
+
+        return auth.window?.id;
+      }
       default:
         throw new Error(`Unknown window: ${String(endpoint)}`);
     }
