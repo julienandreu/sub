@@ -2,6 +2,7 @@ import type { IpcMainInvokeEvent } from 'electron';
 import { Storage } from '../processes/main/storage';
 import { Auth } from '../processes/main/windows/auth';
 import { Widget } from '../processes/main/windows/widget';
+import { AuthService } from '../processes/main/features/authentication';
 
 export class UserError extends Error {
   constructor(message: string) {
@@ -92,6 +93,10 @@ export const users = {
     params.append('grant_type', 'password');
     params.append('username', username);
     params.append('password', password);
+
+    const credentials = new Credentials({ username, password });
+
+    const token = await AuthService.signIn(credentials);
 
     const response = await fetch('https://api.staging.saris.ai/api/token/', {
       method: 'POST',
