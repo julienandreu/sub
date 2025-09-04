@@ -1,27 +1,21 @@
 import { type BrowserWindowConstructorOptions } from 'electron';
-import { Base } from './base';
+import { injectable, singleton } from 'tsyringe';
+import { BaseWindow } from './base';
 
-export class Auth extends Base {
-  private static instance: Auth | null = null;
-  public static getInstance(): Auth {
-    Auth.instance ??= new Auth();
+@injectable()
+@singleton()
+export class AuthWindow extends BaseWindow {
+  protected path = '/auth';
+  protected showOnReady = true;
 
-    return Auth.instance;
-  }
-
-  public override async create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
+  public create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
     if (this.window) {
       this.window.focus();
-
-      return this;
+      return Promise.resolve(this);
     }
 
     return super.create(options);
   }
-
-  protected override showOnReady = true;
-
-  protected path = '/auth';
 
   protected getOptions(): BrowserWindowConstructorOptions {
     return {

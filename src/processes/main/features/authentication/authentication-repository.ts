@@ -1,19 +1,59 @@
-export class AuthRepository {
-  private readonly storage: Storage;
-  private readonly api: Api;
+import { StorageRepository } from '../../infrastructure/storage/storage.interface';
+import { BackendRepository } from '../../infrastructure/backend/backend.interface';
+import { Credentials } from './models/credentials';
+import { Token } from './models/token';
+import { inject, injectable } from 'tsyringe';
 
-  constructor(storage: Storage, api: Api) {
+@injectable()
+export class AuthenticationRepository {
+  private readonly storage: StorageRepository;
+  private readonly api: BackendRepository;
+
+  constructor(
+    @inject(StorageRepository) storage: StorageRepository,
+    @inject(BackendRepository) api: BackendRepository,
+  ) {
     this.storage = storage;
     this.api = api;
   }
 
   async getToken(credentials: Credentials): Promise<Token> {
-    const response = await this.api.signIn(credentials);
+    const { username, password } = credentials;
+
+    const body = new FormData();
+    body.append('username', username);
+    body.append('password', password);
+    body.append('grant_type', 'password');
+
+    const response = await this.api.fetch('https://api.metro.saris.ai/api/token/', {
+      method: 'POST',
+      body,
+    });
+
+    if (!response.ok) {
+      throw new Error('Failed to sign in');
+    }
+
+    const data: unknown = await response.json();
+
+    if (typeof data !== 'object' || data === null) {
+      throw new Error('Invalid response');
+    }
+
+    if (!('access_token' in data && 'token_type' in data)) {
+      throw new Error('Invalid response');
+    }
+
+    return new Token({ value: String(data.access_token), type: String(data.token_type) });
   }
 
-  async revoke() {
-    const response = await this.api.signOut();
+  async revoke(): Promise<boolean> {
+    if (!this.storage.get('token')) {
+      return false;
+    }
 
-    this.storage.clear('token');
+    await this.api.fetch('https://api.metro.saris.ai/api/token/logout');
+
+    return true;
   }
 }

@@ -1,12 +1,13 @@
 import { BrowserWindow, type BrowserWindowConstructorOptions } from 'electron';
+import { injectable } from 'tsyringe';
 import { PRELOAD_PATH } from './constants';
 import { is } from '@electron-toolkit/utils';
 
-export class Base {
+@injectable()
+export class BaseWindow {
   public window: BrowserWindow | null = null;
 
   protected path = '/';
-
   protected showOnReady = false;
 
   protected getOptions(): BrowserWindowConstructorOptions {

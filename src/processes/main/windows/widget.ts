@@ -1,29 +1,18 @@
 import type { BrowserWindowConstructorOptions } from 'electron';
-import { Base } from './base';
+import { singleton } from 'tsyringe';
+import { BaseWindow } from './base';
 
-export class Widget extends Base {
-  private static instance: Widget | null = null;
-  public static getInstance(): Widget {
-    Widget.instance ??= new Widget();
+@singleton()
+export class WidgetWindow extends BaseWindow {
+  protected path = '/widget';
 
-    return Widget.instance;
-  }
-
-  public override async create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
+  public create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
     if (this.window) {
       this.window.focus();
-
-      return this;
+      return Promise.resolve(this);
     }
 
     return super.create(options);
-  }
-
-  protected path = '/widget';
-
-  private constructor() {
-    // private to prevent direct instantiation
-    super();
   }
 
   protected getOptions(): BrowserWindowConstructorOptions {

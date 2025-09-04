@@ -18,8 +18,10 @@
     "preact": "^10.26.9",
     "preact-iso": "^2.9.2",
     "preact-render-to-string": "^6.5.13",
+    "reflect-metadata": "^0.2.2",
     "styled-components": "^6.1.19",
-    "tailwindcss": "^4.1.11"
+    "tailwindcss": "^4.1.11",
+    "tsyringe": "^4.10.0"
   },
   "description": "🥪 Salad Under Bacon",
   "devDependencies": {
@@ -27,6 +29,7 @@
     "@electron-toolkit/tsconfig": "^1.0.1",
     "@eslint/js": "^9.32.0",
     "@preact/preset-vite": "^2.10.0",
+    "@types/better-sqlite3": "^7.6.13",
     "@types/node": "^22.16.5",
     "@typescript/native-preview": "^7.0.0-dev.20250715.1",
     "electron": "^37.2.3",
@@ -39,6 +42,7 @@
   "engines": {
     "node": ">=22.16.0"
   },
+  "license": "MIT",
   "homepage": "https://github.com/julienandreu/sub",
   "main": "./out/main/index.js",
   "name": "sub",
@@ -54,8 +58,8 @@
     "postinstall": "electron-builder install-app-deps",
     "start": "electron-vite preview",
     "typecheck": "npm run typecheck:node && npm run typecheck:web",
-    "typecheck:node": "tsgo --noEmit -p tsconfig.node.json --composite false",
-    "typecheck:web": "tsgo --noEmit -p tsconfig.web.json --composite false"
+    "typecheck:node": "tsgo --noEmit -p tsconfig.processes.json --composite false",
+    "typecheck:web": "tsgo --noEmit -p tsconfig.renderer.json --composite false"
   },
   "version": "1.0.0"
 }

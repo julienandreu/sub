@@ -1,22 +1,19 @@
+import 'reflect-metadata';
+
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { App, app, ipcMain, type IpcMainInvokeEvent, Menu, nativeImage, net, protocol, Tray } from 'electron';
+import { app, ipcMain, Menu, nativeImage, net, protocol, Tray } from 'electron';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { events } from '../../events';
-import { Storage } from './storage';
-import { Auth } from './windows/auth';
-import { Widget } from './windows/widget';
 import appIcon from '../../renderer/assets/icons/mono/tray-icon.png?asset';
+import { container } from './di/container';
+import { AuthenticationService } from './features/authentication/authentication-service';
+import { AuthWindow } from './windows/auth';
+import { WidgetWindow } from './windows/widget';
 
 let trayIcon: Tray;
-
-const emptyIpcMainInvokeEvent: IpcMainInvokeEvent = {} as IpcMainInvokeEvent;
-
-function getStoragePath(app: App) {
-  return join(app.getPath('userData'), 'storage.db');
-}
 
 function getRendererPath() {
   return join(
@@ -44,7 +41,6 @@ async function initialize() {
   ]);
 
   await app.whenReady();
-
 
   const icon = nativeImage.createFromPath(appIcon);
   trayIcon = new Tray(icon);
@@ -92,17 +88,19 @@ async function initialize() {
     optimizer.watchWindowShortcuts(window);
   });
 
-  Storage.getInstance().connect(getStoragePath(app));
-
+  const authenticationService = container.resolve(AuthenticationService);
 
   try {
-    await events['users.me'](emptyIpcMainInvokeEvent);
+    if (!authenticationService.isAuthenticated()) {
+      throw new Error('Not authenticated');
+    }
 
-    const widget = await Widget.getInstance().create();
+    const widget = container.resolve(WidgetWindow);
+    await widget.create();
     widget.window?.show();
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  } catch (_) {
-    await Auth.getInstance().create();
+  } catch {
+    const auth = container.resolve(AuthWindow);
+    await auth.create();
   }
 }
 

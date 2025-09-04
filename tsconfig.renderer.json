@@ -1,7 +1,7 @@
 {
   "extends": "@electron-toolkit/tsconfig/tsconfig.web.json",
   "include": [
-    "src/events/**/*",
+    "src/events/types.ts",
     "src/renderer/**/*.ts",
     "src/renderer/**/*.tsx"
   ],

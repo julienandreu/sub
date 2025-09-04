@@ -1,12 +1,10 @@
 /// <reference types="vite/client" />
-import type { Events } from '../events';
+import type { RendererEvents } from '../events';
 
-type Invoke = <T extends keyof Events>(
-        channel: T,
-        ...args: Parameters<Events[T]> extends [unknown, ...infer Rest]
-          ? Rest
-          : never,
-      ) => ReturnType<Events[T]>;
+type Invoke = <T extends keyof RendererEvents>(
+  channel: T,
+  ...args: RendererEvents[T] extends (...args: infer Args) => unknown ? Args : never,
+) => RendererEvents[T] extends (...args: unknown[]) => infer Return ? Return : never;
 
 interface Versions {
   electron: string;
@@ -29,7 +27,3 @@ declare global {
   }
 }
 
-declare module '*.svg' {
-  const content: string;
-  export default content;
-}
