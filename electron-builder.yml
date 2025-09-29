@@ -1,5 +1,6 @@
 appId: com.electron.app
 productName: sub
+icon: src/renderer/assets/icons/regular/1024x1024.png
 directories:
   buildResources: build
 files:

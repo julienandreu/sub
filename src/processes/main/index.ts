@@ -1,19 +1,17 @@
 import 'reflect-metadata';
 
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { app, ipcMain, Menu, MenuItemConstructorOptions, nativeImage, net, protocol, Tray } from 'electron';
+import { app, ipcMain, net, protocol } from 'electron';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { events } from '../../events';
-import appIcon from '../../renderer/assets/icons/regular/24x24.png?asset';
-import appIconMono from '../../renderer/assets/icons/mono/24x24.png?asset';
 import { container } from './di/container';
 import { AuthenticationService } from './features/authentication/authentication-service';
 import { AuthWindow } from './windows/auth';
 import { WidgetWindow } from './windows/widget';
-
+import { TrayService } from './tray-service';
 
 function getRendererPath() {
   return join(
@@ -23,49 +21,11 @@ function getRendererPath() {
   );
 }
 
-function getAppIcon() {
-  if (process.platform === 'darwin') {
-    return nativeImage.createFromPath(appIconMono);
-  }
-
-  return nativeImage.createFromPath(appIcon);
-}
-
 function initliazeLogger() {
   log.initialize({
     preload: true,
   });
   Object.assign(console, log.functions);
-}
-
-let trayIcon: Tray;
-function setupTray() {
-  const icon = getAppIcon();
-  trayIcon = new Tray(icon);
-
-  const template = [
-    {
-      label: 'Sign-out',
-      accelerator: 'CmdOrCtrl+L',
-      click: () => {
-        console.log('Sign-out');
-      }
-    },
-    { type: 'separator' },
-    {
-      label: `Version ${app.getVersion()}`,
-    },
-    { type: 'separator' },
-    {
-      label: 'Quit',
-      accelerator: 'CmdOrCtrl+Q',
-      role: 'quit',
-    }
-  ] satisfies MenuItemConstructorOptions[];
-
-  const contextMenu = Menu.buildFromTemplate(template);
-
-  trayIcon.setContextMenu(contextMenu);
 }
 
 async function initialize() {
@@ -84,7 +44,11 @@ async function initialize() {
 
   await app.whenReady();
 
-  setupTray();
+  container.resolve(TrayService);
+
+  setInterval(() => {
+    container.resolve(TrayService).update();
+  }, 1000);
 
   protocol.handle('app', request => {
     const { pathname } = new URL(request.url);

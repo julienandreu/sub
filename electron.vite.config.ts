@@ -1,5 +1,4 @@
 import { resolve } from 'path';
-// @ts-expect-error This is a valid import
 import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'electron-vite';
 import preact from '@preact/preset-vite';
@@ -8,7 +7,10 @@ export default defineConfig({
   main: {
     build: {
       rollupOptions: {
-        external: ['better-sqlite3', 'electron']
+        external: [
+          'better-sqlite3',
+          'electron',
+        ],
       },
       commonjsOptions: {
         ignoreDynamicRequires: true
@@ -26,6 +28,9 @@ export default defineConfig({
     },
   },
   renderer: {
-    plugins: [preact(), tailwindcss()]
+    plugins: [
+      preact(),
+      tailwindcss(),
+    ],
   }
 })

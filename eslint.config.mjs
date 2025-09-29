@@ -1,8 +1,8 @@
 import eslint from '@eslint/js';
 import tsParser from '@typescript-eslint/parser';
-import tseslint from 'typescript-eslint';
+import { defineConfig } from 'typescript-eslint';
 
-export default tseslint.config(
+export default defineConfig(
   eslint.configs.recommended,
   {
     ignores: [

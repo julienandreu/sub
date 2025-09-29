@@ -54,6 +54,8 @@ export class AuthenticationRepository {
 
     await this.api.fetch('https://api.metro.saris.ai/api/token/logout');
 
+    this.storage.remove('token');
+
     return true;
   }
 }
