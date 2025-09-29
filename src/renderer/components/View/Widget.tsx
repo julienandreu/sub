@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { useInvoke } from '../../hooks/use-invoke';
-import Icon from '../Layout/Icon';
+import WidgetIcon from '../Layout/WidgetIcon';
 
 const distanceThreshold = 5;
 let start: { x: number; y: number } | null = null;
@@ -73,9 +73,9 @@ function Widget() {
   };
 
   return (
-    <Icon ref={ref} className="no-select">
-      <img src="assets/icons/regular/favicon.ico" alt="SUB" className="pointer-events-none" />
-    </Icon>
+    <WidgetIcon ref={ref}>
+      <img src="assets/icons/regular/48x48.png" alt="SUB" className="pointer-events-none" />
+    </WidgetIcon>
   );
 }
 

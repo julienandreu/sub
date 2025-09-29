@@ -1,19 +1,19 @@
 import 'reflect-metadata';
 
 import { electronApp, optimizer } from '@electron-toolkit/utils';
-import { app, ipcMain, Menu, nativeImage, net, protocol, Tray } from 'electron';
+import { app, ipcMain, Menu, MenuItemConstructorOptions, nativeImage, net, protocol, Tray } from 'electron';
 import log from 'electron-log/main';
 import { existsSync } from 'fs';
 import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { events } from '../../events';
-import appIcon from '../../renderer/assets/icons/mono/tray-icon.png?asset';
+import appIcon from '../../renderer/assets/icons/regular/24x24.png?asset';
+import appIconMono from '../../renderer/assets/icons/mono/24x24.png?asset';
 import { container } from './di/container';
 import { AuthenticationService } from './features/authentication/authentication-service';
 import { AuthWindow } from './windows/auth';
 import { WidgetWindow } from './windows/widget';
 
-let trayIcon: Tray;
 
 function getRendererPath() {
   return join(
@@ -23,15 +23,57 @@ function getRendererPath() {
   );
 }
 
-async function initialize() {
+function getAppIcon() {
+  if (process.platform === 'darwin') {
+    return nativeImage.createFromPath(appIconMono);
+  }
+
+  return nativeImage.createFromPath(appIcon);
+}
+
+function initliazeLogger() {
   log.initialize({
     preload: true,
   });
   Object.assign(console, log.functions);
+}
+
+let trayIcon: Tray;
+function setupTray() {
+  const icon = getAppIcon();
+  trayIcon = new Tray(icon);
+
+  const template = [
+    {
+      label: 'Sign-out',
+      accelerator: 'CmdOrCtrl+L',
+      click: () => {
+        console.log('Sign-out');
+      }
+    },
+    { type: 'separator' },
+    {
+      label: `Version ${app.getVersion()}`,
+    },
+    { type: 'separator' },
+    {
+      label: 'Quit',
+      accelerator: 'CmdOrCtrl+Q',
+      role: 'quit',
+    }
+  ] satisfies MenuItemConstructorOptions[];
+
+  const contextMenu = Menu.buildFromTemplate(template);
+
+  trayIcon.setContextMenu(contextMenu);
+}
+
+async function initialize() {
+  initliazeLogger();
 
   protocol.registerSchemesAsPrivileged([
     {
-      scheme: 'app',
+      scheme: 'saris',
       privileges: {
         standard: true,
         secure: true,
@@ -42,18 +84,7 @@ async function initialize() {
 
   await app.whenReady();
 
-  const icon = nativeImage.createFromPath(appIcon);
-  trayIcon = new Tray(icon);
-  const contextMenu = Menu.buildFromTemplate([
-    { label: 'Item1', type: 'radio' },
-    { label: 'Item2', type: 'radio' }
-  ]);
-
-  // Make a change to the context menu
-  contextMenu.items[1].checked = false;
-
-  // Call this again for Linux because we modified the context menu
-  trayIcon.setContextMenu(contextMenu);
+  setupTray();
 
   protocol.handle('app', request => {
     const { pathname } = new URL(request.url);

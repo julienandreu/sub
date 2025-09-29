@@ -1,0 +1,4 @@
+@theme {
+  --color-widget-background: oklch(0.985 0 0);
+  --color-widget-border: oklch(1 0 0);
+}
