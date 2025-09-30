@@ -9,9 +9,9 @@ const WidgetIcon = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>((
     className={classNames(
       'w-12',
       'h-12',
-      'bg-widget-background',
-      'border-widget-border',
-      'border-1',
+      'bg-background',
+      'border-border-tertiary',
+      'border-2',
       'shadow-md',
       'rounded-full',
       'flex',

@@ -24,8 +24,6 @@ export class AuthenticationService {
   async signIn(credentials: Credentials): Promise<Token> {
     const token = await this.repository.getToken(credentials);
 
-    console.dir({ token }, { depth: null, colors: true });
-
     this.storage.set('token', token.value);
 
     this.api.setToken(token.value);
@@ -35,8 +33,6 @@ export class AuthenticationService {
 
   async signOut(): Promise<boolean> {
     const succeeded = await this.repository.revoke();
-
-    console.dir({ succeeded }, { depth: null, colors: true });
 
     return succeeded;
   }

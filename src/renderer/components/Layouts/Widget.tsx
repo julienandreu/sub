@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { useInvoke } from '../../hooks/use-invoke';
-import WidgetIcon from '../Layout/WidgetIcon';
+import WidgetIcon from '../Elements/WidgetIcon';
 
 const distanceThreshold = 5;
 let start: { x: number; y: number } | null = null;

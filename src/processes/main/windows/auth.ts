@@ -23,7 +23,8 @@ export class AuthWindow extends BaseWindow {
       alwaysOnTop: true,
       autoHideMenuBar: true,
       height: 480,
-      minimizable: false,
+      minHeight: 480,
+      minWidth: 320,
       width: 320,
     };
   }

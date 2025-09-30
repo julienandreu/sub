@@ -1,15 +1,15 @@
 import {
   app,
-  Tray,
   Menu,
   MenuItemConstructorOptions,
   nativeImage,
+  Tray,
 } from 'electron';
 import { inject, singleton } from 'tsyringe';
-import appIconMono from '../../renderer/assets/icons/mono/24x24.png?asset';
-import appIcon from '../../renderer/assets/icons/regular/24x24.png?asset';
 import { AuthenticationService } from './features/authentication/authentication-service';
 import { AuthWindow } from './windows/auth';
+import { getRendererPath } from './path';
+import { join } from 'path';
 
 @singleton()
 export class TrayService {
@@ -20,14 +20,20 @@ export class TrayService {
     @inject(AuthWindow) private readonly authWindow: AuthWindow,
   ) {
     const image = nativeImage.createFromPath(
-      process.platform === 'darwin' ? appIconMono : appIcon
+      join(
+        getRendererPath(),
+        'assets',
+        'icons',
+        process.platform === 'darwin' ? 'mono' : 'regular',
+        '24x24.png',
+      )
     );
 
     this.tray = new Tray(image);
     this.update();
   }
 
-  update() {
+  update(): Menu {
     const isAuthenticated = this.authenticationService.isAuthenticated();
 
     const authenticationAction = isAuthenticated
@@ -35,14 +41,14 @@ export class TrayService {
         label: 'Sign-out',
         accelerator: 'CmdOrCtrl+L',
         click: () => {
-          this.authenticationService.signOut();
+          void this.authenticationService.signOut();
         },
       }
       : {
         label: 'Sign-in',
         accelerator: 'CmdOrCtrl+L',
         click: () => {
-          this.authWindow.create();
+          void this.authWindow.create();
         },
       };
 
@@ -60,9 +66,11 @@ export class TrayService {
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);
+
+    return contextMenu;
   }
 
-  setToolTip(tip: string) {
+  setToolTip(tip: string): void {
     this.tray.setToolTip(tip);
   }
 }

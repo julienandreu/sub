@@ -8,18 +8,9 @@ import { join } from 'path';
 import { pathToFileURL } from 'url';
 import { events } from '../../events';
 import { container } from './di/container';
-import { AuthenticationService } from './features/authentication/authentication-service';
-import { AuthWindow } from './windows/auth';
-import { WidgetWindow } from './windows/widget';
 import { TrayService } from './tray-service';
-
-function getRendererPath() {
-  return join(
-    __dirname,
-    '..',
-    'renderer',
-  );
-}
+import { StartupService } from './startup-service';
+import { getRendererPath } from './path';
 
 function initliazeLogger() {
   log.initialize({
@@ -43,12 +34,6 @@ async function initialize() {
   ]);
 
   await app.whenReady();
-
-  container.resolve(TrayService);
-
-  setInterval(() => {
-    container.resolve(TrayService).update();
-  }, 1000);
 
   protocol.handle('app', request => {
     const { pathname } = new URL(request.url);
@@ -83,20 +68,8 @@ async function initialize() {
     optimizer.watchWindowShortcuts(window);
   });
 
-  const authenticationService = container.resolve(AuthenticationService);
-
-  try {
-    if (!authenticationService.isAuthenticated()) {
-      throw new Error('Not authenticated');
-    }
-
-    const widget = container.resolve(WidgetWindow);
-    await widget.create();
-    widget.window?.show();
-  } catch {
-    const auth = container.resolve(AuthWindow);
-    await auth.create();
-  }
+  container.resolve(TrayService);
+  container.resolve(StartupService);
 }
 
 void initialize();

@@ -1,6 +1,7 @@
 import type { BrowserWindowConstructorOptions } from 'electron';
-import { singleton } from 'tsyringe';
+import { container, singleton } from 'tsyringe';
 import { BaseWindow } from './base';
+import { TrayService } from '../tray-service';
 
 @singleton()
 export class WidgetWindow extends BaseWindow {
@@ -12,7 +13,20 @@ export class WidgetWindow extends BaseWindow {
       return Promise.resolve(this);
     }
 
-    return super.create(options);
+    return super.create(options).then(() => {
+      this.setupContextMenu();
+      return this;
+    });
+  }
+
+  private setupContextMenu(): void {
+    if (!this.window) return;
+
+    this.window.webContents.on('context-menu', (event) => {
+      event.preventDefault();
+      const contextMenu = container.resolve(TrayService).update();
+      contextMenu.popup();
+    });
   }
 
   protected getOptions(): BrowserWindowConstructorOptions {

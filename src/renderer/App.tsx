@@ -1,8 +1,8 @@
 import { LocationProvider, Route, Router } from 'preact-iso';
 import { type ComponentChildren } from 'preact';
-import Widget from './components/View/Widget';
-import Auth from './components/View/Auth';
-import Error from './components/View/Error';
+import Widget from './components/Layouts/Widget';
+import Auth from './components/Layouts/Auth';
+import Error from './components/Layouts/Error';
 
 import { useTheme } from './hooks/use-theme';
 
