@@ -5,7 +5,7 @@ import { useState } from 'preact/hooks';
 function Auth() {
   const loadingSignal = useSignal(false);
   const [errors, setErrors] = useState<string[]>([]);
-  const { user: { signOut } } = useInvoke();
+  const { user: { signIn, signOut } } = useInvoke();
 
   const handleSignOut = async () => {
     try {
@@ -40,7 +40,7 @@ function Auth() {
         throw new Error('Invalid authentication credentials');
       }
 
-      // await signIn(email as string, password as string);
+      void signIn(email as string, password as string);
       setErrors([]);
     } catch (errorCaught) {
       setErrors([String(errorCaught), ...submitErrors]);

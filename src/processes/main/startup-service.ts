@@ -1,12 +1,10 @@
 import { inject, singleton } from 'tsyringe';
-import { AuthenticationService } from './features/authentication/authentication-service';
 import { AuthWindow } from './windows/auth';
 import { WidgetWindow } from './windows/widget';
 
 @singleton()
 export class StartupService {
   constructor(
-    @inject(AuthenticationService) private readonly authenticationService: AuthenticationService,
     @inject(AuthWindow) private readonly authWindow: AuthWindow,
     @inject(WidgetWindow) private readonly widgetWindow: WidgetWindow,
   ) {
@@ -24,11 +22,7 @@ export class StartupService {
   }
 
   private async showWidgetOrAuth() {
-    if (this.authenticationService.isAuthenticated()) {
-      await this.createAndShowWidget();
-
-      return;
-    }
+    await this.createAndShowWidget();
 
     await this.createAndShowAuth();
   }

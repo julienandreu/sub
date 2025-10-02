@@ -10,7 +10,6 @@ import { events } from '../../events';
 import { container } from './di/container';
 import { TrayService } from './tray-service';
 import { StartupService } from './startup-service';
-import { getRendererPath } from './path';
 
 function initliazeLogger() {
   log.initialize({
@@ -23,6 +22,15 @@ async function initialize() {
   initliazeLogger();
 
   protocol.registerSchemesAsPrivileged([
+    {
+      scheme: 'app',
+      privileges: {
+        standard: true,
+        secure: true,
+        supportFetchAPI: true,
+        corsEnabled: true,
+      },
+    },
     {
       scheme: 'saris',
       privileges: {
@@ -39,11 +47,20 @@ async function initialize() {
     const { pathname } = new URL(request.url);
 
     const path = join(
-      getRendererPath(),
+      __dirname,
+      '..',
+      'renderer',
       pathname === '/' ? '/index.html' : pathname
     );
 
-    const uri = existsSync(path) ? path : join(getRendererPath(), 'index.html');
+    const uri = existsSync(path)
+      ? path
+      : join(
+        __dirname,
+        '..',
+        'renderer',
+        'index.html'
+      );
 
     return net.fetch(pathToFileURL(uri).toString());
   });

@@ -7,9 +7,8 @@ import {
 } from 'electron';
 import { inject, singleton } from 'tsyringe';
 import { AuthenticationService } from './features/authentication/authentication-service';
-import { AuthWindow } from './windows/auth';
-import { getRendererPath } from './path';
-import { join } from 'path';
+import { trayIconMono, trayIconRegular } from './assets';
+
 
 @singleton()
 export class TrayService {
@@ -17,23 +16,16 @@ export class TrayService {
 
   constructor(
     @inject(AuthenticationService) private readonly authenticationService: AuthenticationService,
-    @inject(AuthWindow) private readonly authWindow: AuthWindow,
   ) {
     const image = nativeImage.createFromPath(
-      join(
-        getRendererPath(),
-        'assets',
-        'icons',
-        process.platform === 'darwin' ? 'mono' : 'regular',
-        '24x24.png',
-      )
+      process.platform === 'darwin' ? trayIconMono : trayIconRegular
     );
 
     this.tray = new Tray(image);
     this.update();
   }
 
-  update(): Menu {
+  buildMenuTemplate(): MenuItemConstructorOptions[] {
     const isAuthenticated = this.authenticationService.isAuthenticated();
 
     const authenticationAction = isAuthenticated
@@ -44,25 +36,30 @@ export class TrayService {
           void this.authenticationService.signOut();
         },
       }
-      : {
-        label: 'Sign-in',
-        accelerator: 'CmdOrCtrl+L',
-        click: () => {
-          void this.authWindow.create();
-        },
-      };
+      : null;
 
     const template = [
+      {
+        label: 'Saris AI Desktop App',
+      },
+      { type: 'separator' },
       authenticationAction,
       { type: 'separator' },
-      { label: `Version ${app.getVersion()} : ${JSON.stringify(isAuthenticated)}` },
+      { label: `Version ${app.getVersion()}` },
       { type: 'separator' },
       {
         label: 'Quit',
         accelerator: 'CmdOrCtrl+Q',
         role: 'quit',
       },
-    ] satisfies MenuItemConstructorOptions[];
+    ].filter(Boolean);
+
+    // TODO: replace by satisfies MenuItemConstructorOptions[] once Typescript correctly infers the type from `filter()`
+    return template as MenuItemConstructorOptions[];
+  }
+
+  update(): Menu {
+    const template = this.buildMenuTemplate();
 
     const contextMenu = Menu.buildFromTemplate(template);
     this.tray.setContextMenu(contextMenu);

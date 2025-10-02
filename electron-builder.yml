@@ -1,6 +1,7 @@
-appId: com.electron.app
-productName: sub
+appId: ai.saris.desktop-app
+productName: Saris AI Desktop App
 icon: src/renderer/assets/icons/regular/1024x1024.png
+asar: false
 directories:
   buildResources: build
 files:
@@ -21,14 +22,16 @@ nsis:
   createDesktopShortcut: always
 mac:
   category: public.app-category.utilities
-  identity: "Saris AI"
-  appId: com.sub.app
-  entitlementsInherit: build/entitlements.mac.plist
+  # For development/testing: use null for ad-hoc signing
+  # For distribution: replace with your Developer ID certificate name
+  # Example: "Developer ID Application: Saris AI (TEAM_ID)"
+  identity: null
+  hardenedRuntime: true
+  gatekeeperAssess: false
+  entitlementsInherit: builder/entitlements.mac.plist
   extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
+    NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
+    NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
   notarize: false
 dmg:
   background: null
@@ -45,4 +48,4 @@ appImage:
 npmRebuild: false
 publish:
   provider: generic
-  url: https://example.com/auto-updates
+  url: https://app.saris.ai/auto-updates

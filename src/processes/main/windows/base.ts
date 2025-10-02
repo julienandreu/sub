@@ -32,10 +32,33 @@ export class BaseWindow {
       this.window = null;
     });
 
+    // Set CSP and CORS headers
+    this.window?.webContents.session.webRequest.onHeadersReceived(
+      (details, callback) => {
+        if (!details.responseHeaders) {
+          return;
+        }
+
+        if ('access-control-allow-origin' in details.responseHeaders) {
+          delete details.responseHeaders['access-control-allow-origin'];
+        }
+
+        details.responseHeaders['Access-Control-Allow-Origin'] = ['*'];
+        details.responseHeaders['Content-Security-Policy'] = [
+          "default-src 'self' app:; script-src 'self' app:; style-src 'self' 'unsafe-inline' app:; img-src 'self' data: app:"
+        ];
+
+        callback({
+          cancel: false,
+          responseHeaders: details.responseHeaders,
+        });
+      }
+    );
+
     if (is.dev && process.env.ELECTRON_RENDERER_URL) {
       await this.window?.loadURL(`${process.env.ELECTRON_RENDERER_URL}${this.path}`);
     } else {
-      await this.window?.loadURL(`app://-${this.path}`);
+      await this.window?.loadURL(`app://saris-ai/${this.path.replace(/^\//, '')}`);
     }
 
     return this;
