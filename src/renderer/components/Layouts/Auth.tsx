@@ -2,6 +2,7 @@ import { useSignal } from '@preact/signals';
 import { useState } from 'preact/hooks';
 import { useInvoke } from '../../hooks/use-invoke';
 import Logo from '../Elements/Logo';
+import classNames from 'classnames';
 
 function Auth() {
   const loadingSignal = useSignal(false);
@@ -40,8 +41,30 @@ function Auth() {
   };
 
   return (
-    <>
-      <Logo size="medium" variant="regular" className="pointer-events-none" />
+    <div
+      className={classNames(
+        'h-screen',
+        'w-screen',
+      )}
+    >
+      <div
+        className={classNames(
+          'bg-radial-[at_25%_25%]',
+          'from-[#01ADFE]',
+          'from-0%',
+          'via-[#0187FC]',
+          'via-60%',
+          'to-[#056EE4]',
+          'to-100%',
+          'flex',
+          'items-center',
+          'justify-start',
+          'p-4',
+          'select-none',
+        )}
+      >
+        <Logo size="medium" variant="mono" className="pointer-events-none" />
+      </div>
       <h1>
         Sign in to your account
       </h1>
@@ -99,7 +122,7 @@ function Auth() {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 }
 

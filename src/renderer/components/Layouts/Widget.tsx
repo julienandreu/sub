@@ -3,6 +3,7 @@ import { useInvoke } from '../../hooks/use-invoke';
 import WidgetIcon from '../Elements/WidgetIcon';
 import Badge from '../Elements/Badge';
 import Logo from '../Elements/Logo';
+import classNames from 'classnames';
 
 const distanceThreshold = 5;
 let start: { x: number; y: number } | null = null;
@@ -77,7 +78,12 @@ function Widget() {
   return (
     <>
       <WidgetIcon ref={ref}>
-        <Logo size="medium" variant="regular" className="pointer-events-none" />
+        <Logo size="medium" variant="regular"
+          className={classNames(
+            'pointer-events-none',
+            'select-none',
+          )}
+        />
       </WidgetIcon>
       <Badge variant="error" count={0} />
     </>
