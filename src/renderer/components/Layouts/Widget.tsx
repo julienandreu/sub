@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'preact/hooks';
 import { useInvoke } from '../../hooks/use-invoke';
 import WidgetIcon from '../Elements/WidgetIcon';
+import Badge from '../Elements/Badge';
 
 const distanceThreshold = 5;
 let start: { x: number; y: number } | null = null;
@@ -73,9 +74,12 @@ function Widget() {
   };
 
   return (
-    <WidgetIcon ref={ref}>
-      <img src="/icons/regular/48x48.png" alt="SUB" className="pointer-events-none" />
-    </WidgetIcon>
+    <>
+      <WidgetIcon ref={ref}>
+        <img src="/icons/regular/48x48.png" alt="SUB" className="pointer-events-none" />
+      </WidgetIcon>
+      <Badge variant="error" count={0} />
+    </>
   );
 }
 

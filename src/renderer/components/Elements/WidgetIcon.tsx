@@ -19,6 +19,7 @@ const WidgetIcon = forwardRef<HTMLDivElement, HTMLAttributes<HTMLDivElement>>((
       'justify-center',
       'cursor-pointer',
       'no-select',
+      'relative',
     )}
     ref={ref}
     {...props}

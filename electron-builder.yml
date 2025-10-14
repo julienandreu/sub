@@ -1,7 +1,6 @@
 appId: ai.saris.desktop-app
 productName: Saris AI Desktop App
 icon: src/renderer/assets/icons/regular/1024x1024.png
-asar: false
 directories:
   buildResources: build
 files:

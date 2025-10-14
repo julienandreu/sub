@@ -2,6 +2,10 @@
   --color-background: #ffffff;
   --color-background-secondary: #f7f7f7;
   --color-background-tertiary: #efefef;
+  --color-background-info: #1e66f5;
+  --color-background-warning: #fe640b;
+  --color-background-error: #d20f39;
+  --color-background-success: #179299;
   --color-border: #cdcdcd;
   --color-border-secondary: #ababab;
   --color-border-tertiary: #1e66f5;
