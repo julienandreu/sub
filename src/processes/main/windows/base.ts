@@ -8,6 +8,7 @@ export class BaseWindow {
   public window: BrowserWindow | null = null;
 
   protected path = '/';
+  protected title = 'Saris AI';
   protected showOnReady = false;
 
   protected getOptions(): BrowserWindowConstructorOptions {
@@ -71,6 +72,8 @@ export class BaseWindow {
     });
 
     await this.prepare();
+
+    this.window.setTitle(this.title);
 
     return this;
   }

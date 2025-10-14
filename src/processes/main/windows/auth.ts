@@ -6,6 +6,7 @@ import { BaseWindow } from './base';
 @singleton()
 export class AuthWindow extends BaseWindow {
   protected path = '/auth';
+  protected title = 'Sign in to Saris AI';
   protected showOnReady = true;
 
   public create(options: BrowserWindowConstructorOptions = {}): Promise<this> {
